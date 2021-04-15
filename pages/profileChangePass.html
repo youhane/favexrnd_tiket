@@ -39,23 +39,23 @@
           </div>
           <div class="flex flex-col space-y-5">
             <a href="">
-            <div class="flex">
-              <img src="../assets/userUnactive.svg" alt="" />
-              <p class="pl-4">Profile</p>
-            </div>
-          </a>
-          <a href="">
-            <div class="flex">
-              <img src="../assets/icon/lock.svg" alt="" />
-              <p class="pl-4">Change Password</p>
-            </div>
-          </a>
-          <a href="">
-            <div class="flex">
-              <img src="../assets/icon/door.svg" alt="" />
-              <p class="pl-4">Log Out</p>
-            </div>
-          </a>
+              <div class="flex">
+                <img src="../assets/userUnactive.svg" alt="" />
+                <a href=""> <p class="pl-4">Profile</p> </a>
+              </div>
+            </a>
+            <a href="">
+              <div class="flex">
+                <img src="../assets/icon/lock.svg" alt="" />
+                <a href=""> <p class="pl-4">Change Password</p> </a>
+              </div>
+            </a>
+            <a href="">
+              <div class="flex">
+                <img src="../assets/icon/door.svg" alt="" />
+                <a href=""> <p class="pl-4">Log Out</p> </a>
+              </div>
+            </a>
           </div>
         </div>
       </div>
@@ -95,20 +95,51 @@
             <input
               type="password"
               name="newPass"
-              id="newPass"
+              id="newPassword"
               class="border-2 border-gray-300 p-2 rounded-md w-96"
             />
-            <p class="mb-4 text-sm w-96">
+            <p class="text-sm w-96">
               Make sure that your password contains at least 8 characters
               including a number, lowercase, uppercase, and a symbol.
             </p>
-            <p>Confirm Password</p>
+            <p
+              id="err-capital"
+              class="text-red-300 text-left"
+              style="display: none"
+            >
+              Password needs to have a Capital letter
+            </p>
+            <p
+              id="err-nonCapt"
+              class="text-red-300 text-left"
+              style="display: none"
+            >
+              Password needs to have a non capital letter
+            </p>
+            <p
+              id="err-num"
+              class="text-red-300 text-left"
+              style="display: block"
+            >
+              Password needs to have a number
+            </p>
+            <p
+              id="err-len"
+              class="text-red-300 text-left"
+              style="display: none"
+            >
+              Password must be at least 8 characters
+            </p>
+            <p class="mt-4">Confirm Password</p>
             <input
               type="password"
               name="confirmPass"
-              id="confirmPass"
+              id="confirmNewPassword"
               class="border-2 border-gray-300 p-2 rounded-md w-96 mb-4"
             />
+            <p id="err-confirm" class="text-red-300 hidden">
+              Password and confirmation password doesn't match
+            </p>
             <div>
               <button
                 id="btnModal"
@@ -189,28 +220,48 @@
     </div>
     <script src="../script/script.js"></script>
     <script>
-      var modal = document.getElementById("modalnya");
-      var btnModal = document.getElementById("btnModal");
-      var tutup = document.getElementById("tutup");
-
-      if (modal.style.display == "block") {
-        modal.style.display = "none";
-      } else if (modal.style.display == "none") {
-        modal.style.display = "block";
-      }
-
-      // muncul
-      btnModal.onclick = function () {
-        modal.style.display = "block";
+      // confirm password
+      var confirmPass = document.getElementById("confirmNewPassword");
+      confirmPass.onkeyup = function () {
+        if (confirmPass.value != newPassword.value) {
+          document.getElementById("err-confirm").style.display = "block";
+        } else {
+          document.getElementById("err-confirm").style.display = "none";
+        }
       };
-      // ilang di X
-      tutup.onclick = function () {
-        modal.style.display = "none";
-      };
-      // ilang dimana aja
-      window.onclick = function (event) {
-        if (event.target == modal) {
-          modal.style.display = "none";
+
+      var x = document.getElementById("newPassword");
+      x.onkeyup = function () {
+        var capital = document.getElementById("err-capital");
+        var nonCapital = document.getElementById("err-nonCapt");
+        var num = document.getElementById("err-num");
+        var len = document.getElementById("err-len");
+
+        if (x.value.length < 8) {
+          len.style.display = "none";
+        } else if (x.length >= 8) {
+          len.style.display = "block";
+        }
+
+        var lowerCase = /[a-z]/g;
+        if (x.value.match(lowerCase)) {
+          nonCapital.style.display = "none";
+        } else if (!x.value.match(lowercase)) {
+          nonCapital.style.display = "block";
+        }
+
+        var upperCase = /[A-Z]/g;
+        if (!x.value.match(upperCase)) {
+          capital.style.display = "block";
+        } else if (x.value.match(upperCase)) {
+          capital.style.display = "none";
+        }
+
+        var numbers = /[0-9]/g;
+        if (!x.value.match(numbers)) {
+          num.style.display = "block";
+        } else if (x.value.match(numbers)) {
+          num.style.display = "none";
         }
       };
     </script>
